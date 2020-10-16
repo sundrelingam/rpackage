@@ -1,5 +1,5 @@
 # `rpackage`
-## Dummy package to demo how Depends, Imports, and @import differs
+## Dummy package to demo how Depends, Imports, and @import differ
 
 There are a lot of great resources on how to properly handle `R` package metadata and namespaces, but this simple package serves as a concrete example that can be cloned and experimented with.
 
