@@ -34,6 +34,7 @@ The safer way to do the above, without affecting the *user's* search path, is to
 # function() {
 #   drop_na(mtcars)
 # }
+
 installed_and_imported()
 ```
 
@@ -50,6 +51,7 @@ I only need to add the function to the package namespace if I want to use it wit
 # function() {
 #   tibble::as_tibble(mtcars)
 # }
+
 installed_and_attached()
 ```
 
@@ -59,7 +61,8 @@ But if I didn't add it to the package namespace, I wouldn't be able to call it w
 # function() {
 #   as_tibble(mtcars)
 # }
-installed_not_attached()
+
+installed_not_attached() #error
 ```
 
 ### Collate
@@ -70,4 +73,4 @@ I've also included this subsection for `Collate`. This isn't needed **at all** e
 # [1] "S3 Character method dispatched."
 ```
 
-However if we attempted to build the package, sourcing the files in alphabetical order without `Collate`, the build would fail. This can be shown by removing the `@include s4_b.R` tag in `s4_a.R` (which specifies the `Collate` order) and attempting to build the package.
+For `S4` however, if we attempted to build the package by sourcing the files using the default alphabetical order without `Collate`, the build would fail. This can be demonstrated by removing the `@include s4_b.R` tag in `s4_a.R` (which specifies the `Collate` order) and attempting to build the package.
