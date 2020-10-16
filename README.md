@@ -17,10 +17,11 @@ mtcars %>% select(disp)
 
 But because `dplyr` is now attached to *your* search path, my function can call `dplyr` functions even though it's not in the package's namespace, because `R` will eventually find the functions in *your* search path through lexical scoping:
 ```r
-# how the function is using `dplyr` without attaching it
-installed_and_dependent
+# > installed_and_dependent
+# function() {
+#   mtcars  %>% select(disp)
+# }
 
-# run it, it works
 installed_and_dependent()
 
 # more details about what is being done here
@@ -29,7 +30,10 @@ installed_and_dependent()
 
 The safer way to do the above, without affecting the *user's* search path, is to use `@import` and add the function to my package's namespace:
 ```r
-installed_and_imported
+# > installed_and_imported
+# function() {
+#   drop_na(mtcars)
+# }
 installed_and_imported()
 ```
 
@@ -42,12 +46,28 @@ drop_na(mtcars) #error
 
 I only need to add the function to the package namespace if I want to use it without specifying the search path. For example, even without `@import`, I can use a function from `tibble` by specifying the search path with `::`:
 ```r
-installed_and_attached
+# > installed_and_attached
+# function() {
+#   tibble::as_tibble(mtcars)
+# }
 installed_and_attached()
 ```
 
 But if I didn't add it to the package namespace, I wouldn't be able to call it without specifying the search path:
 ```r
-installed_not_attached
+# > installed_not_attached
+# function() {
+#   as_tibble(mtcars)
+# }
 installed_not_attached()
 ```
+
+### Collate
+
+I've also included this subsection for `Collate`. This isn't needed **at all** except for defining `S4` generics and methods. We can see from the `Collate` order that `s3_a.R` containing the methods for the `s3` generic is sourced *after* the file containing the generic (`s3_b.R`), but it causes no issues:
+```r
+# > s3("")
+# [1] "S3 Character method dispatched."
+```
+
+However if we attempted to build the package, sourcing the files in alphabetical order without `Collate`, the build would fail. This can be shown by removing the `@include s4_b.R` tag in `s4_a.R` (which specifies the `Collate` order) and attempting to build the package.
